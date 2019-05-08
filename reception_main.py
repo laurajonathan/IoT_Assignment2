@@ -95,11 +95,17 @@ class Network():
         """
         exit_command = [
             "exit",
-            "quit"
+            "quit",
+            "4"
         ]
         if message in exit_command:
             return True
         return False
+
+    def manage(self):
+        """
+        Manage something
+        """
 
     def run(self, username):
         """
@@ -113,15 +119,19 @@ class Network():
             soc.sendall(username.encode())
             # Wait for confirmation message
             data = soc.recv(self.buffer)
-            if data == "Success!":
+            print(data.decode())
+            if data.decode() == "Success!":
                 # Wait for welcome message
                 data = soc.recv(self.buffer)
-                print(data)
+                print(data.decode())
                 # Start communication
                 while True:
                     # Prompt for user input
                     message = input("Master PI: $ ")
+                    # Check if user input exit message
                     if self.__exit(message):
+                        # Tell Master PI it disconnected
+                        soc.sendall("Disconnect!".encode())
                         break
                     # Send message
                     soc.sendall(message.encode())
@@ -282,12 +292,16 @@ def main():
     # Run menu
     while True:
         option = reception.menu()
+        # Login
         if option == "Login":
             username = reception.login()
+            # Login successful
             if username:
+                # Run socket communication to Master PI
                 network.run(username)
             else:
                 print("Login Failed!")
+        # Register
         elif option == "Register":
             if reception.register():
                 print("Registration Success!")
@@ -296,6 +310,7 @@ def main():
         else:
             print("Goodbye")
             break
+    # Close database connection
     del reception
 
 
