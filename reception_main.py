@@ -237,7 +237,18 @@ class Reception():
         if not email:
             return False
 
-        # Update database detail
+        # add option here to add in facial recognition to registration
+        #print("Would you like to enable facial recognition?")
+        #option = input("Input (1)Yes, (2)No")
+        #if option = 1:
+        #run capture file
+        #else
+        #dont run it lol
+
+        #also need to run encode to train data. This can take some time depending on the set size. Need to find
+        #an appropriate time to do this so the user doesnt wait
+
+        # Update database detail with facial recognition (maybe a yes/no value to check later if the user does have facial recog added)
         self.database.insert_data(
             username,
             password,
@@ -262,6 +273,22 @@ class Reception():
             if username == user_db and password == pass_db:
                 return username
         return ""
+    
+    #def facial_login(self):
+        """
+        Login interface and logic for facial recognition
+        """
+        # Read input from user
+        
+        # Get username and password from database
+        #call recognise. Can return the username value based on what 03_recognise returns
+        #need a check here also to see if user name has facial recog enabled. Otherwise return not enabled message
+        #data = self.database.read_data(username)
+        #if data:
+            #user_db= data[0]
+            #if username == user_db:
+                #return username
+        #return ""
 
     @classmethod
     def menu(cls):
@@ -281,7 +308,7 @@ class Reception():
     def __del__(self):
         del self.database
 
-
+#add option for facial recognition login in below function (add a different login function perhaps?)
 def main():
     """
     Main Method
