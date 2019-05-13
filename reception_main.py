@@ -14,6 +14,7 @@ import re
 import socket
 import getpass
 import MySQLdb
+import facial_recognition
 from passlib.hash import sha256_crypt
 
 HOST = input("Enter IP address of Master PI: ")
@@ -29,7 +30,8 @@ class Database:
 
     def __init__(self):
         self.__connection = MySQLdb.connect(
-            "localhost", "pi", "suwat513", "Assignment2"
+            #"localhost", "pi", "suwat513", "Assignment2"
+            "localhost", "pi", "password123", "temps"
         )
 
     def __execute_query(self, query, *attributes):
@@ -58,7 +60,7 @@ class Database:
         parametrised query then insert data into database
         """
         query = """
-            INSERT INTO users (
+            INSERT INTO userdetails (
                 username,
                 password,
                 firstname,
@@ -67,6 +69,16 @@ class Database:
                 type
                 ) VALUES (%s, %s, %s, %s, %s, %s)
         """
+        #query = """
+            #INSERT INTO users (
+                #username,
+                #password,
+                #firstname,
+                #lastname,
+                #email,
+                #type
+                #) VALUES (%s, %s, %s, %s, %s, %s)
+        #"""
         if self.__validate_data(*attributes):
             self.__execute_query(query, *attributes)
 
@@ -80,6 +92,17 @@ class Database:
             WHERE username = '{}'
             AND password = '{}'
         """.format(username, password)
+        return self.__execute_query(query)
+
+    def read_data_facial(self, username):
+        """
+        Read data from the database with pre-defined query
+        """
+        query = """
+            SELECT username
+            FROM userdetails
+            WHERE username = '{}'
+        """.format(username)
         return self.__execute_query(query)
 
     def __del__(self):
@@ -245,26 +268,28 @@ class Reception():
         email = self.__read_input("email address", r"[^@]+@[^@]+\.[^@]+")
         if not email:
             return False
-
-<<<<<<< HEAD
-        # add option here to add in facial recognition to registration
-        #print("Would you like to enable facial recognition?")
-        #option = input("Input (1)Yes, (2)No")
-        #if option = 1:
-        #run capture file
-        #else
-        #dont run it lol
-
+           # add option here to add in facial recognition to registration
+        print("Would you like to enable facial recognition?")
+        option = input("Input (1)Yes, (2)No: ")
+        while option != "1" and option != "2":
+            print("Please enter (1) or (2): ")
+        if option == "1":
+            ai = facial_recognition.AI(username)
+            ai.configure()
+            ai.run()
+            del ai
+            trainer = facial_recognition.Trainer()
+            trainer.run()
+            #run capture file
+        
         #also need to run encode to train data. This can take some time depending on the set size. Need to find
         #an appropriate time to do this so the user doesnt wait
 
         # Update database detail with facial recognition (maybe a yes/no value to check later if the user does have facial recog added)
-=======
         # Hash the password
         hashed_password = sha256_crypt.hash(password)
 
         # Update database detail
->>>>>>> 2a96dc763ea98e2be41e62c79a490dc16ef6021c
         self.database.insert_data(
             username,
             hashed_password,
@@ -291,7 +316,7 @@ class Reception():
                 return username
         return ""
     
-    #def facial_login(self):
+    def facial_login(self):
         """
         Login interface and logic for facial recognition
         """
@@ -300,26 +325,33 @@ class Reception():
         # Get username and password from database
         #call recognise. Can return the username value based on what 03_recognise returns
         #need a check here also to see if user name has facial recog enabled. Otherwise return not enabled message
-        #data = self.database.read_data(username)
-        #if data:
-            #user_db= data[0]
-            #if username == user_db:
-                #return username
-        #return ""
+        recogniser = facial_recognition.Recogniser()
+        username = recogniser.run()
+        del recogniser
+        data = self.database.read_data_facial(username)
+        if data:
+            user_db = data[0][0]
+            print("username: " + username)
+            print("user db: " + str(user_db))
+            if username == user_db:
+                return username
+        return ""
 
     @classmethod
     def menu(cls):
         """
         Menu interface for register or login
         """
-        option = input("Input (1)Register, (2)Login, (enter)Exit: ")
-        while option != "1" and option != "2" and option != "":
+        option = input("Input (1)Register, (2)Login, (3)Facial Recognition Login, (enter)Exit: ")
+        while option != "1" and option != "2" and option != "3" and option != "":
             print("Please input (1), (2), or (enter)")
-            option = input("Input (1)Register, (2)Login, (enter)Exit: ")
+            option = input("Input (1)Register, (2)Login, (3)Facial Recognition Login, (enter)Exit: ")
         if option == "1":
             return "Register"
         if option == "2":
             return "Login"
+        if option == "3":
+            return "Facial Recognition"
         return ""
 
     def __del__(self):
@@ -342,6 +374,15 @@ def main():
             # Login successful
             if username:
                 # Run socket communication to Master PI
+                network.run(username)
+            else:
+                print("Login Failed!")
+        elif option == "Facial Recognition":
+            username = reception.facial_login()
+            print(username)
+            # Login successful
+            if username:
+                #Run socket communication to Master PI using facial recognition
                 network.run(username)
             else:
                 print("Login Failed!")
