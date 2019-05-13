@@ -1,14 +1,20 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun May  5 14:28:45 2019
+reception_main.py
 
-@author: suwat
+Created by  Suwat Tangtragoonviwatt (s3710374)
+            Laura Jonathan (s3696013)
+            Warren Shipp (s3690682)
+            Aidan Afonso (s3660805)
+
+This script is intended to .....
+
 """
 
 import re
 import socket
 import getpass
 import MySQLdb
+from passlib.hash import sha256_crypt
 
 HOST = input("Enter IP address of Master PI: ")
 PORT = 65000  # The port used by the server.
@@ -140,6 +146,9 @@ class Network():
                     # Print out to console
                     print(data.decode())
                 print("Disconnecting from server.")
+            else:
+                # Handshake authentication failed
+                soc.sendall("Disconnect!".encode())
         print("Disconnected")
 
 
@@ -237,6 +246,7 @@ class Reception():
         if not email:
             return False
 
+<<<<<<< HEAD
         # add option here to add in facial recognition to registration
         #print("Would you like to enable facial recognition?")
         #option = input("Input (1)Yes, (2)No")
@@ -249,9 +259,15 @@ class Reception():
         #an appropriate time to do this so the user doesnt wait
 
         # Update database detail with facial recognition (maybe a yes/no value to check later if the user does have facial recog added)
+=======
+        # Hash the password
+        hashed_password = sha256_crypt.hash(password)
+
+        # Update database detail
+>>>>>>> 2a96dc763ea98e2be41e62c79a490dc16ef6021c
         self.database.insert_data(
             username,
-            password,
+            hashed_password,
             firstname,
             lastname,
             email,
@@ -270,7 +286,8 @@ class Reception():
         data = self.database.read_data(username, password)
         if data:
             user_db, pass_db = data[0]
-            if username == user_db and password == pass_db:
+            if (username == user_db
+                    and sha256_crypt.verify(password, pass_db)):
                 return username
         return ""
     
