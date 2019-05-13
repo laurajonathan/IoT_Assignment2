@@ -1,8 +1,13 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun May  5 14:34:07 2019
+reception_main.py
 
-@author: suwat
+Created by  Suwat Tangtragoonviwatt (s3710374)
+            Laura Jonathan (s3696013)
+            Warren Shipp (s3690682)
+            Aidan Afonso (s3660805)
+
+This script is intended to .....
+
 """
 
 import socket
