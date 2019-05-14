@@ -36,11 +36,19 @@ class AI():
         
     def run(self):
         img_counter = 0
+        count = 1
+        key = input("Press q to quit or ENTER to continue: ")
+        if key == 'q':
+            return
+        print("Look at the camera! :)")
+        while count < 4:
+            print(str(count)+"...")
+            count += 1
+            time.sleep(1.0)
+            if count == 3:
+                print("Smile!")
+
         while img_counter <= 15:
-            key = input("Press q to quit or ENTER to continue: ")
-            if key == 'q':
-                break
-        
             ret, frame = self.cam.read()
             if not ret:
                 break
@@ -58,6 +66,7 @@ class AI():
                 cv2.imwrite(img_name, frame[y:y+h,x:x+w])
                 print("{} written!".format(img_name))
                 img_counter += 1
+            time.sleep(0.5)
 
     def __del__(self):
         self.cam.release()
@@ -91,7 +100,7 @@ class Trainer():
             # detect the (x, y)-coordinates of the bounding boxes
             # corresponding to each face in the input image
             boxes = face_recognition.face_locations(rgb,
-                model="cnn")
+                model="hog")
 
             # compute the facial embedding for the face
             encodings = face_recognition.face_encodings(rgb, boxes)
@@ -125,7 +134,7 @@ class Recogniser():
         # allow the camera sensor to warm up
         print("[INFO] starting video stream...")
         writer = None
-        time.sleep(2.0)
+        time.sleep(1.0)
 
         # loop over frames from the video file stream
         while True:
@@ -142,7 +151,7 @@ class Recogniser():
             # corresponding to each face in the input frame, then compute
             # the facial embeddings for each face
             boxes = face_recognition.face_locations(rgb,
-                    model="cnn")
+                    model="hog")
             encodings = face_recognition.face_encodings(rgb, boxes)
             names = []
 
@@ -197,7 +206,7 @@ class Recogniser():
                 
                 break
                 # Set a flag to sleep the cam for fixed time
-                time.sleep(2.0)
+                time.sleep(1.0)
 
 
             # if the video writer is None *AND* we are supposed to write
