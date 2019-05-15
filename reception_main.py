@@ -70,7 +70,7 @@ class Database:
         if self.__validate_data(*attributes):
             self.__execute_query(query, *attributes)
 
-    def read_data(self, username, password):
+    def read_data(self, username):
         """
         Read data from the database with pre-defined query
         """
@@ -78,8 +78,7 @@ class Database:
             SELECT username, password
             FROM users
             WHERE username = '{}'
-            AND password = '{}'
-        """.format(username, password)
+        """.format(username)
         return self.__execute_query(query)
 
     def __del__(self):
@@ -93,20 +92,6 @@ class Network():
     def __init__(self, address=ADDRESS, buffer=BUFFER):
         self.address = address
         self.buffer = buffer
-
-    @classmethod
-    def __exit(cls, message):
-        """
-        Check for exit input in console
-        """
-        exit_command = [
-            "exit",
-            "quit",
-            "4"
-        ]
-        if message in exit_command:
-            return True
-        return False
 
     def manage(self):
         """
@@ -127,29 +112,53 @@ class Network():
             data = soc.recv(self.buffer)
             print(data.decode())
             if data.decode() == "Success!":
-                # Wait for welcome message
+                # Wait for welcome message and menu
                 data = soc.recv(self.buffer)
                 print(data.decode())
                 # Start communication
                 while True:
                     # Prompt for user input
                     message = input("Master PI: $ ")
-                    # Check if user input exit message
-                    if self.__exit(message):
-                        # Tell Master PI it disconnected
-                        soc.sendall("Disconnect!".encode())
-                        break
                     # Send message
                     soc.sendall(message.encode())
                     # Wait for response
                     data = soc.recv(self.buffer)
-                    # Print out to console
-                    print(data.decode())
+                    # Check if Disconnected from Master Pi
+                    if data.decode() == "Disconnect!":
+                        break
+                    # Check if it a submenu
+                    if data.decode() == "submenu":
+                        self.run_submenu(soc, "")
+                    else:
+                        # Print out to console
+                        print(data.decode())
                 print("Disconnecting from server.")
             else:
                 # Handshake authentication failed
                 soc.sendall("Disconnect!".encode())
         print("Disconnected")
+
+    def run_submenu(self, soc, sub_menu):
+        """
+        Run Submenu
+        """
+        # Wait for response
+        data = soc.recv(self.buffer)
+        # Print out to console
+        print(data.decode())
+        sub_menu = sub_menu + "/" + data.decode().strip().split(" ")[0]
+        # Prompt for user input
+        message = input("Master PI:{} $ ".format(sub_menu))
+        # Send message
+        soc.sendall(message.encode())
+        # Wait for response
+        data = soc.recv(self.buffer)
+        # Check if it a submenu
+        if data.decode() == "submenu":
+            self.run_submenu(soc, sub_menu)
+        else:
+            # Print out to console
+            print(data.decode())
 
 
 class Reception():
@@ -268,7 +277,7 @@ class Reception():
         username = input("Enter username: ")
         password = getpass.getpass(prompt="Enter password: ")
         # Get username and password from database
-        data = self.database.read_data(username, password)
+        data = self.database.read_data(username)
         if data:
             user_db, pass_db = data[0]
             if (username == user_db
@@ -282,7 +291,7 @@ class Reception():
         Menu interface for register or login
         """
         option = input("Input (1)Register, (2)Login, (enter)Exit: ")
-        while option != "1" and option != "2" and option != "":
+        while option not in ("1", "2", ""):
             print("Please input (1), (2), or (enter)")
             option = input("Input (1)Register, (2)Login, (enter)Exit: ")
         if option == "1":
