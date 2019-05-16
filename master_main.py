@@ -57,7 +57,7 @@ class Database:
         """
         for attr in attributes:
             if isinstance(attr, str):
-                if attr != "borrowed" or attr != "returned":
+                if attr != "borrowed" and attr != "returned":
                     return False
         return True
 
@@ -72,9 +72,8 @@ class Database:
                 BookID,
                 Status,
                 Quantity,
-                BorrowedDate,
-                ReturnedDate
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                BorrowedDate
+                ) VALUES (%s, %s, %s, %s, %s)
         """
         if self.__validate_record(*attributes):
             self.__execute_cloud_query(query, *attributes)
@@ -137,7 +136,7 @@ class Database:
         Read book from id from the database with pre-defined query
         """
         query = """
-            SELECT Title, Quantity FROM Book
+            SELECT Title, ISBN, Quantity FROM Book
             WHERE BookID = '{}'
         """.format(book_id)
         return self.__execute_cloud_query(query)
@@ -369,9 +368,8 @@ class Master():
                 user_id,
                 book_id,
                 'borrowed',
-                quantity - 1,
-                datetime.datetime.now(),
-                None
+                1,
+                datetime.datetime.now()
             )
             # Update Book Quantity
             self.__database.update_book_quantity(book_id, quantity - 1)
@@ -435,7 +433,7 @@ class Master():
             datetime.datetime.now()
         )
         # Get Book Quantity
-        for _, quantity in self.__database.read_book_from_id(book_id):
+        for _, _, quantity in self.__database.read_book_from_id(book_id):
             # Update Book Quantity
             self.__database.update_book_quantity(book_id, quantity + 1)
         return True
@@ -485,9 +483,9 @@ class Master():
         for response in responses.split("|"):
             # Check if book_id match the borrowed book
             if return_option == "1":
-                book_id = self.__database.get_book_id(title=response)
+                book_id = self.__database.get_book_id(title=response)[0][0]
             else:
-                book_id = self.__database.get_book_id(isbn=response)
+                book_id = self.__database.get_book_id(isbn=response)[0][0]
             record_id = record_ids[book_ids.index(book_id)]
             if book_id not in book_ids:
                 # No Book
@@ -513,16 +511,35 @@ class Master():
         records = self.__database.read_borrowed_record(user_id)
         for _, book_id, borrowed_date in records:
             book = self.__database.read_book_from_id(book_id)
-            for title, _ in book:
-                response += title + "\t" + borrowed_date + "\n"
+            for title, isbn, _ in book:
+                response += (
+                    title + "\t"
+                    + isbn + "\t"
+                    + str(borrowed_date) + "\n"
+                )
         return response
+
+    @classmethod
+    def __beautify_query_result(cls, query_result):
+        """
+        Re-format tuple into string with tab and newline
+        """
+        result = ""
+        # attributes[0] is ID
+        for attributes in query_result:
+            if len(attributes) > 1:
+                result += str(attributes[1])
+            for attribute in attributes[2:]:
+                result += "\t" + str(attribute)
+            result += "\n"
+        return result
 
     def manage(self, option, network):
         """
         Manage the application
         """
         # Get UserID
-        user_id = self.__database.get_user_id(network.get_username())
+        user_id = self.__database.get_user_id(network.get_username())[0][0]
         # Convert to lower case
         option = option.lower()
         # Store database output
@@ -531,6 +548,8 @@ class Master():
         if option == "1" or option.startswith("title"):
             # Search
             result = self.__search_book(network)
+            # Re-format query result
+            result = self.__beautify_query_result(result)
             valid_input = True
         elif option == "2" or option.startswith("borrow"):
             # Borrow
@@ -543,6 +562,8 @@ class Master():
         elif option == "4" or option.startswith("list a"):
             # List all book
             result = self.__list_all_books()
+            # Re-format query result
+            result = self.__beautify_query_result(result)
             valid_input = True
         elif option == "5" or option.startswith("list b"):
             # List all book
