@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link href="{{ url_for('static', filename='vendor/fonts/circular-std/style.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fonts/fontawesome/css/fontawesome-all.css') }}">
+    <title>Smart Library - Group 35</title>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="index.html">Smart Library</a>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+                        <li class="nav-item">
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{ url_for('static', filename='images/avatar-1.jpg') }}" alt="" class="user-avatar-md rounded-circle"></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="nav-user-info">
+                                    <h5 class="mb-0 text-white nav-user-name">Jaqen</h5>
+                                    <span class="status"></span><span class="ml-2">Admin</span>
+                                </div>
+                                <a class="dropdown-item" href="login.html"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+       <div class="nav-left-sidebar sidebar-dark">
+            <div class="menu-list">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="d-xl-none d-lg-none" href="#">List</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-divider">
+                                Menu
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link active" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-book"></i>Books<span class="badge badge-success">6</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>Data Visualization</a>
+                                <div id="submenu-3" class="collapse submenu" style="">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Daily</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">Weekly</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">List of the books</h2>
+                            </div>
+                            <div class="product-btn">
+                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Book</a>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Adding Book</h5>
+                                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></a>                
+                                            </div>
+                                            <form action="{{ url_for('api.addBook') }}" method="post" novalidate>
+                                                <div class="modal-body">
+                                                    <label for="inputTitle">Title</label>
+                                                    <input type="text" class="form-control" name="title">
+                                                    <label for="inputAuthor">Author</label>
+                                                    <input type="text" class="form-control" name="author">
+                                                    <label for="inputISBN">ISBN</label>
+                                                    <input type="text" class="form-control" name="isbn">
+                                                    <label for="inputQuantity">Quantity</label>
+                                                    <input type="number" class="form-control" name="quantity">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                                                    <button type="submit" class="btn btn-primary">Confirm</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
+                            <div class="row">
+                                {% for book in books %}
+                                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="product-thumbnail">
+                                            <div class="product-img-head">
+                                                <div class="product-img">
+                                                    <img src="{{ url_for('static', filename='images/eco-product-img-1.png') }}" alt="" class="img-fluid">
+                                                </div>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-content-head">
+                                                    <h3 class="product-title">{{ book.Title }}</h3>
+                                                    <div class="product-rating d-inline-block">
+                                                        Available
+                                                    </div>
+                                                    <div class="product-title">{{ book.Author }}</div>
+                                                    <div class="product-status">ISBN : {{ book.ISBN }}</div>
+                                                    <div class="product-quantity">Quantity : {{ book.Quantity }}</div>
+                                                </div>
+                                                <div class="product-btn">
+                                                    <a href="javascript:sendDelete('{{ url_for("api.bookDelete", id=book.BookID) }}')" class="btn btn-primary">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
+                            <div class="product-sidebar">
+                                <div class="product-sidebar-widget">
+                                    <h4 class="mb-0">Book Filter</h4>
+                                </div>
+                                    <div class="product-sidebar-widget">
+                                        <h4 class="product-sidebar-widget-title">Status</h4>
+                                        <div class="custom-control custom-radio custom-color-blue ">
+                                            <input type="radio" id="color-1" name="customRadio" class="custom-control-input">
+                                            <label class="custom-control-label" for="color-1">Available</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-color-red ">
+                                            <input type="radio" id="color-2" name="customRadio" class="custom-control-input">
+                                            <label class="custom-control-label" for="color-2">Borrowed</label>
+                                        </div>
+                                    </div>
+                                <div class="product-sidebar-widget">
+                                    <a href="#" class="btn btn-outline-light">Reset Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- footer -->
+                <!-- ============================================================== -->
+                <div class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                Assignment 2 - Group 35
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="text-md-right footer-links d-none d-sm-block">
+                                    <a href="javascript: void(0);">GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end footer -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- end wrapper  -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+        <!-- ============================================================== -->
+        <!-- end main wrapper  -->
+        <!-- ============================================================== -->
+        <!-- Optional JavaScript -->
+        <!-- jquery 3.3.1 -->
+        <script src="{{ url_for('static', filename='vendor/jquery/jquery-3.3.1.min.js') }}"></script>
+        <!-- bootstap bundle js -->
+        <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.js') }}"></script>
+        <!-- slimscroll js -->
+        <script src="{{ url_for('static', filename='vendor/slimscroll/jquery.slimscroll.js') }}"></script>
+        <!-- main js -->
+        <script src="{{ url_for('static', filename='libs/js/main-js.js') }}"></script>
+        <script>
+            function sendDelete(url) {
+                var request = new XMLHttpRequest();
+                request.open('DELETE', url, true);
+                request.send();
+                alert("Book Deleted!");
+                location.reload(true);
+            }
+        </script>
+</body>
+ 
+</html>
