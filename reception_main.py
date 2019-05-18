@@ -6,6 +6,8 @@ Created by  Suwat Tangtragoonviwatt (s3710374)
             Warren Shipp (s3690682)
             Aidan Afonso (s3660805)
 
+pip3 install passlib
+
 This script is intended to .....
 
 """
