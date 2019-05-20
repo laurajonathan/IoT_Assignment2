@@ -50,13 +50,13 @@ class QR_Scanner():
 				barcodeType = barcode.type
 
 				# if the barcode text has not been seen before print it and update the set
-				if barcodeData.rstrip() not in found:
-					print("[FOUND] Type: {}, Data: {}".format(barcodeType, barcodeData))
-					found.add(barcodeData.rstrip())
-					counter += 1
+				#if barcodeData.rstrip() not in found:
+				print("[FOUND] Type: {}, Data: {}".format(barcodeType, barcodeData))
+				found.add(barcodeData.rstrip())
+				counter += 1
 		
 			# wait a little before scanning again
-			time.sleep(1)
+			time.sleep(2)
 
 		# iterate through the set and combine all isbn numbers into a string seperated by |
 		new_count = 0
