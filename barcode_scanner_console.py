@@ -34,6 +34,7 @@ class QR_Scanner():
 		# count the number of books that have been scanned
 		counter = 0
 		# loop over the frames from the video stream
+		print("Please scan your first book....")
 		while counter < self.amount:
 			# grab the frame from the threaded video stream and resize it to
 			# have a maximum width of 400 pixels
