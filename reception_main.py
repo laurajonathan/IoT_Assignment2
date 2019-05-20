@@ -29,10 +29,12 @@ class Database:
     Database class for all local database operations
     """
 
-    def __init__(self):
-        self.__connection = MySQLdb.connect(
-            "localhost", "pi", "suwat513", "Assignment2"
-        )
+    def __init__(self, connection=None):
+        if(connection is None):
+            connection = MySQLdb.connect(
+                "localhost", "pi", "suwat513", "Assignment2"
+            )
+        self.__connection = connection
 
     def __execute_query(self, query, *attributes):
         """
