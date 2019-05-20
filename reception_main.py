@@ -6,9 +6,7 @@ Created by  Suwat Tangtragoonviwatt (s3710374)
             Warren Shipp (s3690682)
             Aidan Afonso (s3660805)
 
-pip3 install passlib
-
-This script is intended to .....
+This script is intended to run the smart library system as a reception device
 
 """
 
@@ -17,6 +15,8 @@ import socket
 import getpass
 import MySQLdb
 from passlib.hash import sha256_crypt
+from qr_code_scanner import QRCodeScanner
+from facial_recognition import Capture, Trainer, Recogniser
 
 HOST = input("Enter IP address of Master PI: ")
 PORT = 65000  # The port used by the server.
@@ -151,8 +151,15 @@ class Network():
         # Print out to console
         print(data.decode())
         sub_menu = sub_menu + "/" + data.decode().strip().split(" ")[0]
-        # Prompt for user input
-        message = input("Master PI:{} $ ".format(sub_menu))
+        # Run QR Code Scanner
+        if sub_menu == "Return/QR":
+            qr_code_scanner = QRCodeScanner()
+            qr_code_scanner.setup()
+            message = qr_code_scanner.run()
+            del qr_code_scanner
+        else:
+            # Prompt for user input
+            message = input("Master PI:{} $ ".format(sub_menu))
         # Send message
         soc.sendall(message.encode())
         # Wait for response
@@ -289,20 +296,68 @@ class Reception():
                 return username
         return ""
 
+    def register_by_facial_recognition(self):
+        """
+        Register by facial recognition interface and logic
+        """
+        # Welcome message
+        print("Welcome!")
+        print("Please input user detail")
+        # Read username
+        username = self.__read_input("username", r"^(?=.{8,20}$)[\w]+$")
+        if not username:
+            return False
+
+        input("Press any key when you ready")
+
+        # Start capture the image
+        capture = Capture(username)
+        capture.configure()
+        capture.run()
+        del capture
+
+        # Train the image
+        trainer = Trainer()
+        trainer.run()
+        trainer.save()
+
+        return True
+
+    @classmethod
+    def login_by_facial_recognition(cls):
+        """
+        Login by facial recognition interface and logic
+        """
+        input("Press any key when you ready")
+        recogniser = Recogniser()
+        recogniser.load()
+        username = recogniser.run()
+        del recogniser
+        if username:
+            return username
+        return ""
+
     @classmethod
     def menu(cls):
         """
         Menu interface for register or login
         """
-        option = input("Input (1)Register, (2)Login, (enter)Exit: ")
-        while option not in ("1", "2", ""):
-            print("Please input (1), (2), or (enter)")
-            option = input("Input (1)Register, (2)Login, (enter)Exit: ")
-        if option == "1":
-            return "Register"
-        if option == "2":
-            return "Login"
-        return ""
+        menu = """
+            Menu
+            (1) Register
+            (2) Register with Facial Recognition
+            (3) Login
+            (4) Login with Facial Recognition
+            (enter) Exit
+        """
+        print(menu)
+        option = input("Input Option: ")
+        while option not in ("1", "2", "3", "4", ""):
+            print("Invalid Input!")
+            print(menu)
+            option = input("Input Option Again: ")
+
+        return option
 
     def __del__(self):
         del self.database
@@ -319,8 +374,11 @@ def main():
     while True:
         option = reception.menu()
         # Login
-        if option == "Login":
-            username = reception.login()
+        if option in ("3", "4"):
+            if option == "3":
+                username = reception.login()
+            else:
+                username = reception.login_by_facial_recognition()
             # Login successful
             if username:
                 # Run socket communication to Master PI
@@ -328,8 +386,12 @@ def main():
             else:
                 print("Login Failed!")
         # Register
-        elif option == "Register":
-            if reception.register():
+        elif option in ("1", "2"):
+            if option == "1":
+                result = reception.register()
+            else:
+                result = reception.register_by_facial_recognition()
+            if result:
                 print("Registration Success!")
             else:
                 print("Registration Failed!")

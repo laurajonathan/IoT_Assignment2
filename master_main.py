@@ -1,17 +1,16 @@
 """
-reception_main.py
+master_main.py
 
 Created by  Suwat Tangtragoonviwatt (s3710374)
             Laura Jonathan (s3696013)
             Warren Shipp (s3690682)
             Aidan Afonso (s3660805)
 
-pip3 install google-api-python-client google-auth-httplib2 \
-    google-auth-oauthlib oauth2client httplib2
 
-This script is intended to .....
+This script is intended to run the smart library system as a master device
 
 """
+
 from __future__ import print_function
 import socket
 import pytz
@@ -576,6 +575,7 @@ class Master():
             Return By
             1. Title
             2. ISBN
+            3. QR Code
             To return multiple book: book1|book2|book3
         """)
         # Wait for Reception Pi response
@@ -593,6 +593,13 @@ class Master():
             network.send_message("submenu")
             # Ask for input
             network.send_message("ISBN : (Book ISBN1|Book ISBN2)")
+            # Wait for Reception Pi response
+            responses = self.__wait_for_user(network)
+        elif return_option == "3":
+            # Told Reception Pi it a sub menu
+            network.send_message("submenu")
+            # Ask for input
+            network.send_message("QR Code Scan Menu")
             # Wait for Reception Pi response
             responses = self.__wait_for_user(network)
         else:
