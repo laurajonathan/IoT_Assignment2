@@ -12,15 +12,29 @@ pip3 install google-api-python-client google-auth-httplib2 \
 This script is intended to .....
 
 """
-
-import datetime
+from __future__ import print_function
 import socket
+import pytz
+from datetime import datetime
+from datetime import timedelta
 import MySQLdb
+from googleapiclient.discovery import build
+from httplib2 import Http
+from oauth2client import file, client, tools
+
 
 HOST = ""  # Empty string means to listen on all IP's on the machine.
 PORT = 65000  # Port to listen on (non-privileged ports are > 1023).
 ADDRESS = (HOST, PORT)
 BUFFER = 4096
+
+SCOPES = "https://www.googleapis.com/auth/calendar"
+STORE = file.Storage("token.json")
+CREDS = STORE.get()
+if(not CREDS or CREDS.invalid):
+    FLOW = client.flow_from_clientsecrets("credentials.json", SCOPES)
+    CREDS = tools.run_flow(FLOW, STORE)
+SERVICE = build("calendar", "v3", http=CREDS.authorize(Http()))
 
 
 class Database:
@@ -28,10 +42,12 @@ class Database:
     Database class for all local database operations
     """
 
-    def __init__(self):
-        self.__connection = MySQLdb.connect(
-            "35.197.173.114", "root", "suwat513", "Assignment2"
-        )
+    def __init__(self, connection=None):
+        if connection is None:
+            connection = MySQLdb.connect(
+                "35.197.173.114", "root", "suwat513", "Assignment2"
+            )
+        self.__connection = connection
 
     def __execute_cloud_query(self, cloud_query, *attributes):
         """
@@ -120,6 +136,15 @@ class Database:
         query = """
             SELECT * FROM User WHERE Username = '{}'
         """.format(username)
+        return self.__execute_cloud_query(query)
+
+    def read_user_from_id(self, user_id):
+        """
+        Read book from id from the database with pre-defined query
+        """
+        query = """
+            SELECT Username FROM User WHERE UserID = '{}'
+        """.format(user_id)
         return self.__execute_cloud_query(query)
 
     def read_book(self, title="", author="", isbn=""):
@@ -268,13 +293,99 @@ class Network():
               "is disconnected")
 
 
+class Calendar():
+    """
+    Google Calendar
+    """
+
+    def __init__(self, service=SERVICE):
+        self.__service = service
+
+    def add_event(self, book, user, end_date):
+        """
+        Add event into google calendar
+        """
+        time_start = "{}T09:00:00+10:00".format(end_date)
+        time_end = "{}T17:00:00+10:00".format(end_date)
+        event = {
+            "summary": "Book Borrowed Event",
+            "location": "SMART LIBRARY",
+            "description": "Book {} Borrowed by {}".format(book, user),
+            "start": {
+                "dateTime": time_start,
+                "timeZone": "Australia/Melbourne",
+            },
+            "end": {
+                "dateTime": time_end,
+                "timeZone": "Australia/Melbourne",
+            },
+            "attendees": [
+                {"email": user + "@smartlibrary.com"},
+            ],
+            "reminders": {
+                "useDefault": False,
+                "overrides": [
+                    {"method": "email", "minutes": 5},
+                    {"method": "popup", "minutes": 10},
+                ],
+            }
+        }
+
+        self.__service.events().insert(
+            calendarId="primary",
+            body=event
+        ).execute()
+
+    def get_event_id(self, book, user):
+        """
+        Get the list of event from google calendar
+        Return event id corresponding to the book_id and user_id
+        """
+        now = datetime.utcnow().isoformat() + "Z"  # "Z" indicates UTC time.
+        events_result = self.__service.events().list(
+            calendarId="primary",
+            timeMin=now,
+            singleEvents=True,
+            orderBy="startTime"
+        ).execute()
+        events = events_result.get("items", [])
+
+        for event in events:
+            description = event["description"].split(" ")
+            title = " ".join(description[1:-3])
+            if book == title and user == description[-1]:
+                return event["id"]
+        return ""
+
+    def remove_event(self, book, user):
+        """
+        Remove event by event id
+        """
+        event_id = self.get_event_id(book, user)
+        self.__service.events().delete(
+            calendarId='primary',
+            eventId=event_id
+        ).execute()
+
+
 class Master():
     """
     Master PI
     """
 
-    def __init__(self, database=Database()):
+    def __init__(self, database=Database(), calendar=Calendar()):
         self.__database = database
+        self.__calendar = calendar
+
+    @classmethod
+    def get_current_time(cls):
+        """
+        Return current time with melbourne timezone
+        """
+        # Set datetime with melbourne timezone
+        utc_now = pytz.utc.localize(datetime.utcnow())
+        pst_now = utc_now.astimezone(pytz.timezone("Australia/Melbourne"))
+        return pst_now
 
     @classmethod
     def menu(cls):
@@ -366,16 +477,25 @@ class Master():
         for book_id, _, _, _, quantity in books:
             if quantity <= 0:
                 return False
+
+            # Get current time
+            current_time = self.get_current_time()
             # Update Record
             self.__database.insert_record(
                 user_id,
                 book_id,
                 'borrowed',
                 1,
-                datetime.datetime.now()
+                current_time
             )
             # Update Book Quantity
             self.__database.update_book_quantity(book_id, quantity - 1)
+            # Add Google Calendar Event
+            date = current_time
+            end_date = (date + timedelta(days=7)).strftime("%Y-%m-%d")
+            user = self.__database.read_user_from_id(user_id)[0][0]
+            book = self.__database.read_book_from_id(book_id)[0][0]
+            self.__calendar.add_event(book, user, end_date)
         return True
 
     def __borrow_books(self, network, user_id):
@@ -425,7 +545,7 @@ class Master():
                 return "Failed!"
         return "Success!"
 
-    def __return_book(self, book_id, record_id):
+    def __return_book(self, book_id, record_id, user_id):
         """
         Update Record for borrowed book
         """
@@ -433,12 +553,16 @@ class Master():
         self.__database.update_record(
             record_id,
             'returned',
-            datetime.datetime.now()
+            self.get_current_time()
         )
         # Get Book Quantity
         for _, _, quantity in self.__database.read_book_from_id(book_id):
             # Update Book Quantity
             self.__database.update_book_quantity(book_id, quantity + 1)
+            # Remove Google Calendar Event
+            user = self.__database.read_user_from_id(user_id)[0][0]
+            book = self.__database.read_book_from_id(book_id)[0][0]
+            self.__calendar.remove_event(book, user)
         return True
 
     def __return_books(self, network, user_id):
@@ -493,7 +617,7 @@ class Master():
             if book_id not in book_ids:
                 # No Book
                 return "Failed!"
-            if not self.__return_book(book_id, record_id):
+            if not self.__return_book(book_id, record_id, user_id):
                 # Failed
                 return "Failed!"
             book_ids.remove(book_id)
