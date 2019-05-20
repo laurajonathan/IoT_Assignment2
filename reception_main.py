@@ -16,6 +16,7 @@ import re
 import socket
 import getpass
 import MySQLdb
+import barcode_scaner_console as QR_Scanner
 from passlib.hash import sha256_crypt
 
 HOST = input("Enter IP address of Master PI: ")
@@ -130,6 +131,12 @@ class Network():
                     # Check if Disconnected from Master Pi
                     if data.decode() == "Disconnect!":
                         break
+                    # Check if QR barcode scan is needed
+                    if data.decode() == "QR Scan":
+                        qr_scanner = QR_Scanner()
+                        isbn_numbers = qr_scanner.run()
+                        # Send QR scanner string back to master
+                        soc.sendall(isbn_numbers.encode())
                     # Check if it a submenu
                     if data.decode() == "submenu":
                         self.run_submenu(soc, "")

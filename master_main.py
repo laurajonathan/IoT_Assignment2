@@ -576,6 +576,7 @@ class Master():
             Return By
             1. Title
             2. ISBN
+            3. QR Code
             To return multiple book: book1|book2|book3
         """)
         # Wait for Reception Pi response
@@ -593,6 +594,13 @@ class Master():
             network.send_message("submenu")
             # Ask for input
             network.send_message("ISBN : (Book ISBN1|Book ISBN2)")
+            # Wait for Reception Pi response
+            responses = self.__wait_for_user(network)
+        elif return_option == "3":
+            # Tell network to start QR Scanner
+            network.send_message("QR Scan")
+            # Tell user to scan their QR code
+            network.send_message("Please scan your QR code/s.")
             # Wait for Reception Pi response
             responses = self.__wait_for_user(network)
         else:
