@@ -11,15 +11,15 @@ class test_data_cloud(unittest.TestCase):
     HOST = "35.197.173.114"
     USER = "root"
     PASSWORD = "suwat513"
-    DATABASE = "test"
+    DATABASE = "Test"
 
-    def setup(self):
+    def setUp(self):
         self.connection = MySQLdb.connect(test_data_cloud.HOST, test_data_cloud.USER, test_data_cloud.PASSWORD, test_data_cloud.DATABASE)
-        
+        self.db = MasterDatabase(self.connection)
         with self.connection.cursor() as cursor:
-            cursor.execute("drop table if exists testingbook")
+            cursor.execute("drop table if exists Book")
             cursor.execute("""
-                create table if not exists testingbook(
+                create table if not exists Book(
                     BookID int not null auto_increment,
                     Title text not null,
                     Author text not null,
@@ -27,12 +27,11 @@ class test_data_cloud(unittest.TestCase):
                     Quantity int not null,
                     constraint PK_Book primary key (BookID) 
                 )""")
-            cursor.execute("insert into testingbook (Title, Author, ISBN, Quantity)values ('book1', 'author1', '1', '5')")
-            cursor.execute("insert into testingbook (Title, Author, ISBN, Quantity)values ('book2', 'author2', '2', '5')")
-            cursor.execute("insert into testingbook (Title, Author, ISBN, Quantity)values ('book3', 'author3', '3', '5')")
-            cursor.execute("drop table if exists testrecords")
+            cursor.execute("insert into Book (Title, Author, ISBN, Quantity)values ('book1', 'author1', '1', 5)")
+            cursor.execute("insert into Book (Title, Author, ISBN, Quantity)values ('book2', 'author2', '2', 5)")
+            cursor.execute("drop table if exists Record")
             cursor.execute("""
-                create table if not exists testrecords (
+                create table if not exists Record(
                     RecordID int not null auto_increment,
                     UserID int not null,
                     BookID int not null,
@@ -40,17 +39,13 @@ class test_data_cloud(unittest.TestCase):
                     Quantity int not null,
                     BorrowedDate datetime not null,
                     ReturnedDate datetime null,
-                    constraint PK_Record primary key (RecordID),
-                    constraint FK_Record_User foreign key (UserID) references User (UserID),
-                    constraint FK_Record_Book foreign key (BookID) references Book (BookID)
+                    constraint PK_Record primary key (RecordID)
                 )""")
-            cursor.execute("""insert into testrecords (UserID, BookID, Status,
-                            Quantity, BorrowedDate)values ('1', 'book1', 'borrowed', '1', 
-                            BorrowedDate = %s""", (datetime.datetime.now()))
         self.connection.commit()
         
     def tearDown(self):
         try:
+            self.db.connection.close()
             self.connection.close()
         except:
             pass
@@ -59,43 +54,66 @@ class test_data_cloud(unittest.TestCase):
 
     def countBooks(self):
         with self.connection.cursor() as cursor:
-            cursor.execute("select count(*) from testingbook")
+            cursor.execute("select count(*) from Book")
             return cursor.fetchone()[0]
 
     def countRecords(self):
         with self.connection.cursor() as cursor:
-            cursor.execute("select count(*) from testrecords")
+            cursor.execute("select count(*) from Record")
             return cursor.fetchone()[0]
 
-    def test_execute_cloud_query(self):
-        db = MasterDatabase(self.connection)
-        query = """select count(*) from testingbooks"""
-        count = self.countBooks()
-        query_count = db.__execute_cloud_query(query)
-        self.assertEquals(query_count, count)
-
-    def test_validate_record(self):
-        db = MasterDatabase(self.connection)
-        self.assertTrue(db.__validate_record('book1', 'author1', 'borrowed', '1', '5'))
-        self.assertFalse(db.__validate_record('book2', 'author2','borrowed', '1', 5))
+    def getBookQuantity(self, id):
+        with self.connection.cursor() as cursor:
+            cursor.execute("select Quantity from Book where BookID = '{}'".format(id))
+            return cursor.fetchone()[0]
+        
+    def checkRecord(self, id):
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT Status FROM Record WHERE RecordID = '{}'".format(id))
+            return cursor.fetchone()[0]
 
     def test_insert_record(self):
-        db = MasterDatabase(self.connection)
+        date = datetime.datetime.now()
         count = self.countRecords()
-        db.insert_record('book2', 'author2','borrowed', '1', datetime.datetime.now())
-        self.assertTrue(count + 1 == self.countRecords())
-        db.insert_record('book3', 'author3','borrowed', '1', datetime.datetime.now())
-        self.assertTrue(count + 1 == self.countRecords())
-
+        self.db.insert_record(1, 1,'borrowed', 1, date)
+        self.db.insert_record(1, 1,'borrowed', 1, date)
+        self.assertEqual(count + 2, self.countRecords())
+		
     def test_read_book_funcs(self):
-        db = MasterDatabase(self.connection)
         booktitle = "book1"
         bookauthor = "author1"
         bookisbn = '1'
-        bookdetails = db.read_book(booktitle, bookauthor, bookisbn)
-        self.assertEquals(bookdetails, "book1 author1 1")
-        bookdetails = db.read_book_from_id('1')
-        self.assertEquals(bookdetails, "book1 1 4")
+        bookdetails = self.db.read_book(booktitle, bookauthor, bookisbn)
+        self.assertEqual(bookdetails, ((1, 'book1', 'author1', '1', 5),))
 
+    def test_read_book_funcs_id(self):
+        bookdetails = self.db.read_book_from_id('1')
+        self.assertEqual(bookdetails, (('book1', '1', 5),))
+
+    def test_read_all_book(self):
+        allbooks = self.db.read_all_book()
+        expected = ((1, 'book1', 'author1', '1', 5), (2, 'book2', 'author2', '2', 5))
+        self.assertEqual(allbooks, expected)
+		
+    def test_read_borrowed(self):
+        date = datetime.datetime.now()
+        self.db.insert_record(1, 1,'borrowed', 1, date)
+        borrowed = self.db.read_borrowed_record('1')
+        borrowedid = borrowed[0]
+        self.assertEqual(borrowedid[0], 1)
+    
+    def test_update_book_quantity(self):
+        expected_quantity = 10
+        self.db.update_book_quantity(2, 10)
+        quantity = self.getBookQuantity(2)
+        self.assertEqual(quantity, expected_quantity)
+
+    def test_update_record(self):
+        date = datetime.datetime.now()
+        self.db.insert_record(1, 1,'borrowed', 1, date)
+        self.db.update_record(1, 'returned', date)
+        record_status = self.checkRecord(1)
+        self.assertEqual(record_status, 'returned')
+        
 if __name__ == "__main__":
     unittest.main()
