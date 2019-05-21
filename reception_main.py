@@ -152,7 +152,7 @@ class Network():
         print(data.decode())
         sub_menu = sub_menu + "/" + data.decode().strip().split(" ")[0]
         # Run QR Code Scanner
-        if sub_menu == "Return/QR":
+        if sub_menu == "/Return/QR":
             qr_code_scanner = QRCodeScanner()
             qr_code_scanner.setup()
             message = qr_code_scanner.run()
@@ -308,8 +308,6 @@ class Reception():
         if not username:
             return False
 
-        input("Press any key when you ready")
-
         # Start capture the image
         capture = Capture(username)
         capture.configure()
@@ -328,11 +326,11 @@ class Reception():
         """
         Login by facial recognition interface and logic
         """
-        input("Press any key when you ready")
         recogniser = Recogniser()
         recogniser.load()
         username = recogniser.run()
         del recogniser
+
         if username:
             return username
         return ""

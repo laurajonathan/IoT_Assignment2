@@ -384,7 +384,10 @@ class Master():
         # Set datetime with melbourne timezone
         utc_now = pytz.utc.localize(datetime.utcnow())
         pst_now = utc_now.astimezone(pytz.timezone("Australia/Melbourne"))
-        return pst_now
+        return datetime.strptime(
+            pst_now.strftime('%Y-%m-%d %H:%M:%S'),
+            '%Y-%m-%d %H:%M:%S'
+        )
 
     @classmethod
     def menu(cls):
@@ -620,10 +623,10 @@ class Master():
                 book_id = self.__database.get_book_id(title=response)[0][0]
             else:
                 book_id = self.__database.get_book_id(isbn=response)[0][0]
-            record_id = record_ids[book_ids.index(book_id)]
-            if book_id not in book_ids:
-                # No Book
+            # No Book
+            if book_id not in book_ids:              
                 return "Failed!"
+            record_id = record_ids[book_ids.index(book_id)]
             if not self.__return_book(book_id, record_id, user_id):
                 # Failed
                 return "Failed!"

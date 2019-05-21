@@ -70,7 +70,7 @@ class Capture():
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.__face_detector.detectMultiScale(gray, 1.3, 5)
 
-            if not faces:
+            if len(faces) < 0:
                 print("No face detected, please try again")
                 continue
 
@@ -164,7 +164,7 @@ class Recogniser():
     Recogniser class to detect if the face match the dataset
     """
     def __init__(self):
-        self.__display = 1
+        self.__display = 0
         self.__user = ""
         self.__video_stream = VideoStream(src=0).start()
         self.__data = ""
@@ -177,7 +177,7 @@ class Recogniser():
         """
         # load the known faces and embeddings
         print("[INFO] loading encodings...")
-        self.__data = pickle.loads(open('encodings.pickle', "rb").read())
+        self.__data = pickle.loads(open("encodings.pickle", "rb").read())
         # initialize the video stream and pointer to output video file, then
         # allow the camera sensor to warm up
         print("[INFO] starting video stream...")
