@@ -36,6 +36,8 @@ class QRCodeScanner():
         """
         # ask the user how many books theyd like to return
         amount_string = input("How many books would you like to return?: ")
+        if amount_string.isdigit() is True:
+            self.amount = int(amount_string)
         while amount_string.isdigit() is not True:
             amount_string = input("Please enter a number or Enter to cancel: ")
             if amount_string.isdigit():
