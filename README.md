@@ -45,7 +45,7 @@ marshmallow-sqlalchemy
 requests
 ```
 
-The inernal API included
+The internal API included
 ```
 flask_api.py
 ```
