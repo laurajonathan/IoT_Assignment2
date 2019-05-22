@@ -89,5 +89,8 @@ class QRCodeScanner():
         return "|".join(found)
 
     def __del__(self):
+        """
+        Cleanup function
+        """
         # close the output CSV file do a bit of cleanup
         self.__video_stream.stop()

@@ -55,21 +55,22 @@ class Capture():
         if key == 'q':
             return
         print("Look at the camera! :)")
+        # Count down before taking the photos
         while count < 4:
             print(str(count)+"...")
             count += 1
             time.sleep(1.0)
             if count == 3:
                 print("Smile!")
-
+        # Take 15 photos of the user
         while img_counter <= 15:
             ret, frame = self.__cam.read()
             if not ret:
                 break
-
+            # Convert the images to gray
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.__face_detector.detectMultiScale(gray, 1.3, 5)
-
+            # Alert the user if a face is not being detected
             if len(faces) < 0:
                 print("No face detected, please try again")
                 continue
@@ -92,6 +93,9 @@ class Capture():
             time.sleep(0.5)
 
     def __del__(self):
+        """
+        Cleanup function
+        """
         self.__cam.release()
         cv2.destroyAllWindows()
 
