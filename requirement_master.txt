@@ -2,6 +2,10 @@
 
 pip3 install mysqlclient
 
+--- Installing pytz on Pi ---
+
+pip3 install pytz
+
 --- Installing Google Calendar API Client on Pi ---
 
 pip3 install google-api-python-client
