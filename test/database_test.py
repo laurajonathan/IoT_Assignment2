@@ -13,6 +13,7 @@ class test_data(unittest.TestCase):
     DATABASE = "TestUser"
 
     def setUp(self):
+        print("Testing: ", self._testMethodName)
         self.connection = MySQLdb.connect(test_data.HOST, test_data.USER, test_data.PASSWORD, test_data.DATABASE)
         self.db = ReceptionDatabase(self.connection)
         with self.connection.cursor() as cursor:
