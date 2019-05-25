@@ -17,14 +17,13 @@ import MySQLdb
 from passlib.hash import sha256_crypt
 from qr_code_scanner import QRCodeScanner
 from facial_recognition import Capture, Trainer, Recogniser
+from voice_recognition import VoiceRecognition
 
-HOST = input("Enter IP address of Master PI: ")
 PORT = 65000  # The port used by the server.
 BUFFER = 4096
-ADDRESS = (HOST, PORT)
 
 
-class Database:
+class DatabaseReception:
     """
     Database class for all local database operations
     """
@@ -89,11 +88,11 @@ class Database:
         self.__connection.close()
 
 
-class Network():
+class NetworkReception():
     """
     Network class to communicate between device (RP and MP)
     """
-    def __init__(self, address=ADDRESS, buffer=BUFFER):
+    def __init__(self, address, buffer=BUFFER):
         self.address = address
         self.buffer = buffer
 
@@ -157,6 +156,12 @@ class Network():
             qr_code_scanner.setup()
             message = qr_code_scanner.run()
             del qr_code_scanner
+        elif sub_menu == "/Search/Voice":
+            # Run Voice Recognition
+            voice_recognition = VoiceRecognition()
+            error_message, message = voice_recognition.listen()
+            if error_message:
+                print(error_message)
         else:
             # Prompt for user input
             message = input("Master PI:{} $ ".format(sub_menu))
@@ -176,7 +181,7 @@ class Reception():
     """
     Reception PI
     """
-    def __init__(self, database=Database()):
+    def __init__(self, database=DatabaseReception()):
         self.database = database
 
     @classmethod
@@ -366,8 +371,10 @@ def main():
     Main Method
     """
     # Initialization
+    host = input("Enter IP address of Master PI: ")
+    address = (host, PORT)
     reception = Reception()
-    network = Network()
+    network = NetworkReception(address)
     # Run menu
     while True:
         option = reception.menu()

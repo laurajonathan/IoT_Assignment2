@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Master PI docs &#8212; IoT_Assignment2-SmartLibrary 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="IoT_Assignment2-SmartLibrary 0.1 documentation" href="index.html" />
+    <link rel="next" title="Artificial Intelligence Modules docs" href="AI.html" />
+    <link rel="prev" title="Reception PI docs" href="Reception.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-master_main">
+<span id="master-pi-docs"></span><h1>Master PI docs<a class="headerlink" href="#module-master_main" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="master_main.DatabaseMaster">
+<em class="property">class </em><code class="descclassname">master_main.</code><code class="descname">DatabaseMaster</code><span class="sig-paren">(</span><em>connection=None</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Database class for all local database operations</p>
+<dl class="method">
+<dt id="master_main.DatabaseMaster.get_book_id">
+<code class="descname">get_book_id</code><span class="sig-paren">(</span><em>title=''</em>, <em>author=''</em>, <em>isbn=''</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.get_book_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get BookID from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.get_user_id">
+<code class="descname">get_user_id</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.get_user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get UserID from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.insert_record">
+<code class="descname">insert_record</code><span class="sig-paren">(</span><em>*attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.insert_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the data and prevent SQL Injection attack with
+parametrised query then insert data into database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.insert_user">
+<code class="descname">insert_user</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.insert_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the data and prevent SQL Injection attack with
+parametrised query then insert data into database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_all_book">
+<code class="descname">read_all_book</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_all_book" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read all book from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_book">
+<code class="descname">read_book</code><span class="sig-paren">(</span><em>title=''</em>, <em>author=''</em>, <em>isbn=''</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_book" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read book from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_book_from_id">
+<code class="descname">read_book_from_id</code><span class="sig-paren">(</span><em>book_id</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_book_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read book from id from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_borrowed_record">
+<code class="descname">read_borrowed_record</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_borrowed_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read record from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_user">
+<code class="descname">read_user</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read user from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.read_user_from_id">
+<code class="descname">read_user_from_id</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.read_user_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read book from id from the database with pre-defined query</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.update_book_quantity">
+<code class="descname">update_book_quantity</code><span class="sig-paren">(</span><em>book_id</em>, <em>book_quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.update_book_quantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the data and prevent SQL Injection attack with
+parametrised query then update data into database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.DatabaseMaster.update_record">
+<code class="descname">update_record</code><span class="sig-paren">(</span><em>record_id</em>, <em>status</em>, <em>returned_date</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.DatabaseMaster.update_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the data and prevent SQL Injection attack with
+parametrised query then update data into database</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="master_main.NetworkMaster">
+<em class="property">class </em><code class="descclassname">master_main.</code><code class="descname">NetworkMaster</code><span class="sig-paren">(</span><em>address=(''</em>, <em>65000)</em>, <em>buffer=4096</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Network class to communicate between device (RP and MP)</p>
+<dl class="method">
+<dt id="master_main.NetworkMaster.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>soc</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure socket, connection and address
+This method will wait until Reception PI is connected</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.disconnect">
+<code class="descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect when Reception PI closed connection</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.get_connection">
+<code class="descname">get_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.get_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter for connection</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.get_reception_address">
+<code class="descname">get_reception_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.get_reception_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter for Reception PI address</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.get_username">
+<code class="descname">get_username</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.get_username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter for username</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.recv_message">
+<code class="descname">recv_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.recv_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Listen for message and return message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.NetworkMaster.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.NetworkMaster.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send Message</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="master_main.Calendar">
+<em class="property">class </em><code class="descclassname">master_main.</code><code class="descname">Calendar</code><span class="sig-paren">(</span><em>service=&lt;googleapiclient.discovery.Resource object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Calendar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google Calendar</p>
+<dl class="method">
+<dt id="master_main.Calendar.add_event">
+<code class="descname">add_event</code><span class="sig-paren">(</span><em>book</em>, <em>user</em>, <em>end_date</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Calendar.add_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add event into google calendar</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.Calendar.get_event_id">
+<code class="descname">get_event_id</code><span class="sig-paren">(</span><em>book</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Calendar.get_event_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of event from google calendar
+Return event id corresponding to the book_id and user_id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.Calendar.remove_event">
+<code class="descname">remove_event</code><span class="sig-paren">(</span><em>book</em>, <em>user</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Calendar.remove_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove event by event id</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="master_main.Master">
+<em class="property">class </em><code class="descclassname">master_main.</code><code class="descname">Master</code><span class="sig-paren">(</span><em>database=&lt;master_main.DatabaseMaster object&gt;</em>, <em>calendar=&lt;master_main.Calendar object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Master" title="Permalink to this definition">¶</a></dt>
+<dd><p>Master PI</p>
+<dl class="classmethod">
+<dt id="master_main.Master.get_current_time">
+<em class="property">classmethod </em><code class="descname">get_current_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Master.get_current_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return current time with melbourne timezone</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.Master.manage">
+<code class="descname">manage</code><span class="sig-paren">(</span><em>option</em>, <em>network</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Master.manage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage the application</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="master_main.Master.menu">
+<em class="property">classmethod </em><code class="descname">menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Master.menu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Menu interface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="master_main.Master.run_user_check">
+<code class="descname">run_user_check</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#master_main.Master.run_user_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>If new user logged in register in the cloud database</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Reception.html" title="previous chapter">Reception PI docs</a></li>
+      <li>Next: <a href="AI.html" title="next chapter">Artificial Intelligence Modules docs</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Master.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Group_35.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Master.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

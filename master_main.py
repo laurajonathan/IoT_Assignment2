@@ -13,9 +13,9 @@ This script is intended to run the smart library system as a master device
 
 from __future__ import print_function
 import socket
-import pytz
 from datetime import datetime
 from datetime import timedelta
+import pytz
 import MySQLdb
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -30,13 +30,13 @@ BUFFER = 4096
 SCOPES = "https://www.googleapis.com/auth/calendar"
 STORE = file.Storage("token.json")
 CREDS = STORE.get()
-if(not CREDS or CREDS.invalid):
+if not CREDS or CREDS.invalid:
     FLOW = client.flow_from_clientsecrets("credentials.json", SCOPES)
     CREDS = tools.run_flow(FLOW, STORE)
 SERVICE = build("calendar", "v3", http=CREDS.authorize(Http()))
 
 
-class Database:
+class DatabaseMaster:
     """
     Database class for all local database operations
     """
@@ -219,7 +219,7 @@ class Database:
         self.__connection.close()
 
 
-class Network():
+class NetworkMaster():
     """
     Network class to communicate between device (RP and MP)
     """
@@ -372,7 +372,7 @@ class Master():
     Master PI
     """
 
-    def __init__(self, database=Database(), calendar=Calendar()):
+    def __init__(self, database=DatabaseMaster(), calendar=Calendar()):
         self.__database = database
         self.__calendar = calendar
 
@@ -442,6 +442,7 @@ class Master():
             1. Title
             2. Author
             3. ISBN
+            4. Voice Recognition
         """)
         # Wait for Reception Pi response
         search_option = self.__wait_for_user(network)
@@ -470,6 +471,14 @@ class Master():
             # Wait for Reception Pi response
             isbn = self.__wait_for_user(network)
             return self.__database.read_book(isbn=isbn)
+        if search_option == "4":
+            # Told Reception Pi it a sub menu
+            network.send_message("submenu")
+            # Ask for input
+            network.send_message("Voice : (Title|Author|ISBN)")
+            # Wait for Reception Pi response
+            isbn = self.__wait_for_user(network)
+            return ""
         return "Error! Please input a valid option"
 
     def __borrow_book(self, user_id, books):
@@ -624,7 +633,7 @@ class Master():
             else:
                 book_id = self.__database.get_book_id(isbn=response)[0][0]
             # No Book
-            if book_id not in book_ids:              
+            if book_id not in book_ids:
                 return "Failed!"
             record_id = record_ids[book_ids.index(book_id)]
             if not self.__return_book(book_id, record_id, user_id):
@@ -736,7 +745,7 @@ def main():
     Main Method
     """
     # Initialization
-    network = Network()
+    network = NetworkMaster()
     master = Master()
     # Wait for Reception PI
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as soc:

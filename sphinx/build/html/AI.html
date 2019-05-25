@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Artificial Intelligence Modules docs &#8212; IoT_Assignment2-SmartLibrary 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="IoT_Assignment2-SmartLibrary 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Master PI docs" href="Master.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-facial_recognition">
+<span id="artificial-intelligence-modules-docs"></span><h1>Artificial Intelligence Modules docs<a class="headerlink" href="#module-facial_recognition" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="facial_recognition.Capture">
+<em class="property">class </em><code class="descclassname">facial_recognition.</code><code class="descname">Capture</code><span class="sig-paren">(</span><em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture user image when for facial recognition login</p>
+<dl class="method">
+<dt id="facial_recognition.Capture.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Capture.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Config camera</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="facial_recognition.Capture.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Capture.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run capture</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="facial_recognition.Trainer">
+<em class="property">class </em><code class="descclassname">facial_recognition.</code><code class="descname">Trainer</code><a class="headerlink" href="#facial_recognition.Trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trainer Class to train the image captured by Capture Class
+Prepare for facial recognition login</p>
+<dl class="method">
+<dt id="facial_recognition.Trainer.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Trainer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the training</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="facial_recognition.Trainer.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Trainer.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>dump the facial encodings + names to disk</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="facial_recognition.Recogniser">
+<em class="property">class </em><code class="descclassname">facial_recognition.</code><code class="descname">Recogniser</code><a class="headerlink" href="#facial_recognition.Recogniser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recogniser class to detect if the face match the dataset</p>
+<dl class="method">
+<dt id="facial_recognition.Recogniser.encoding">
+<code class="descname">encoding</code><span class="sig-paren">(</span><em>rgb</em>, <em>boxes</em><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Recogniser.encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="facial_recognition.Recogniser.load">
+<code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Recogniser.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load trained data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="facial_recognition.Recogniser.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#facial_recognition.Recogniser.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the recogniser</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-qr_code_scanner"></span><dl class="class">
+<dt id="qr_code_scanner.QRCodeScanner">
+<em class="property">class </em><code class="descclassname">qr_code_scanner.</code><code class="descname">QRCodeScanner</code><a class="headerlink" href="#qr_code_scanner.QRCodeScanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>QR Code Scanner class
+Detect QR Code Object then extract the message inside</p>
+<dl class="method">
+<dt id="qr_code_scanner.QRCodeScanner.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_code_scanner.QRCodeScanner.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run QR Code Scanner</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="qr_code_scanner.QRCodeScanner.setup">
+<code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_code_scanner.QRCodeScanner.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup the config</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-voice_recognition"></span><dl class="class">
+<dt id="voice_recognition.VoiceRecognition">
+<em class="property">class </em><code class="descclassname">voice_recognition.</code><code class="descname">VoiceRecognition</code><a class="headerlink" href="#voice_recognition.VoiceRecognition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Voice Recognition class
+Listen to audio input and detect speech.</p>
+<dl class="method">
+<dt id="voice_recognition.VoiceRecognition.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#voice_recognition.VoiceRecognition.listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin listening to audio input and return recognised text and any errors</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Master.html" title="previous chapter">Master PI docs</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/AI.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Group_35.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/AI.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
