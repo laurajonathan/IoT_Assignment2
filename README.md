@@ -90,6 +90,7 @@ Flask modules (smartlib)
 Flask templates/
 * login.html
 * smartlib.html
+* data_visualization.html
 
 Python testing modules
 * cloud_database_test.py
