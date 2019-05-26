@@ -161,6 +161,7 @@ class NetworkReception():
             voice_recognition = VoiceRecognition()
             error_message, message = voice_recognition.listen()
             if error_message:
+                message = ""
                 print(error_message)
         else:
             # Prompt for user input

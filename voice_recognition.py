@@ -41,17 +41,16 @@ class VoiceRecognition():
             print("Listening...")
             try:
                 audio = self.r.listen(source, timeout = 1.5)
-            except sr.WaitTimeoutError:
-                error = 1
+            except sr.WaitTimeoutError as e:
+                error = e
 
         # recognize speech using Google Speech Recognition
         try:
             result = self.r.recognize_google(audio)
-        except sr.UnknownValueError:
-            error = 2
+        except sr.UnknownValueError as e:
+            error = e
         except sr.RequestError as e:
-            error = 3
-            result = e
+            error = e
         finally:
             return error, result
 
