@@ -79,7 +79,7 @@ This project consists of 5 python modules
 * master_main.py
 * qr_code_scanner.py
 * reception_main.py
-*** voice_recognition.py ***
+* voice_recognition.py
 
 Flask modules (smartlib)
 * flask_api.py
@@ -93,6 +93,7 @@ Flask templates/
 
 Python testing modules
 * cloud_database_test.py
+* database_test.py
 
 ## IDE tools
 
