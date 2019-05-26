@@ -149,3 +149,18 @@ sudo /etc/init.d/dphys-swapfile restart
 --- Installing imutils python3 package ---
 
 pip3 install imutils
+
+--- Installing Voice Recognition and Audio packages ---
+
+pip3 install SpeechRecognition
+sudo apt-get install portaudio19-dev python-all-dev python3-all-dev
+pip3 install pyaudio
+pip3 install google-api-python-client
+sudo apt-get install flac
+
+--- Installing Jack ---
+
+sudo apt-get install jackd
+
+then run this on a seperate terminal:
+jackd -r -d alsa -r 44100

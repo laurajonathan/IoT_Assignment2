@@ -1,11 +1,15 @@
 """
 voice_recognition.py
+
 Modified by Suwat Tangtragoonviwatt (s3710374)
             Laura Jonathan (s3696013)
             Warren Shipp (s3690682)
             Aidan Afonso (s3660805)
-This script includes a context manager wrapper function to suppress
-alsa errors from voice_recognition.py.
+
+
+The VoiceRecognition class listens to audio from
+the designated microphone and returns a string.
+
 """
 
 import speech_recognition as sr
@@ -17,6 +21,7 @@ class VoiceRecognition():
     Listen to audio input and detect speech.
     """
     def __init__(self):
+        #set microphone name and find its device id
         MIC_NAME = "Plantronics GameCom 780/788: USB Audio (hw:1,0)"
         with util.noalsaerr():
             for i, microphone_name in enumerate(sr.Microphone.list_microphone_names()):
@@ -30,6 +35,7 @@ class VoiceRecognition():
         """
         error = 0
         result = ""
+        #listen for audio
         with util.noalsaerr(), sr.Microphone(device_index = self.device_id) as source:
             self.r.adjust_for_ambient_noise(source)
             print("Listening...")
