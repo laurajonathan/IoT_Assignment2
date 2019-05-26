@@ -60,10 +60,10 @@
                                 Menu
                             </li>
                             <li class="nav-item ">
-                                <a class="nav-link active" href="{{ url_for('site.index') }}" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-book"></i>Books<span class="badge badge-success">6</span></a>
+                                <a class="nav-link" href="{{ url_for('site.index') }}" data-target="#submenu-1" aria-controls="submenu-1"><i class="fa fa-book"></i>Books<span class="badge badge-success">6</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('site.data_visualization') }}" data-target="#submenu-3" aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>Data Visualization</a>
+                                <a class="nav-link active" href="{{ url_for('site.data_visualization') }}" data-target="#submenu-3" aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>Data Visualization</a>
                             </li>
                         </ul>
                     </div>
@@ -85,93 +85,25 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">List of the books</h2>
-                            </div>
-                            <div class="product-btn">
-                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Book</a>
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Adding Book</h5>
-                                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span></a>                
-                                            </div>
-                                            <form action="{{ url_for('api.addBook') }}" method="post" novalidate>
-                                                <div class="modal-body">
-                                                    <label for="inputTitle">Title</label>
-                                                    <input type="text" class="form-control" name="title">
-                                                    <label for="inputAuthor">Author</label>
-                                                    <input type="text" class="form-control" name="author">
-                                                    <label for="inputISBN">ISBN</label>
-                                                    <input type="text" class="form-control" name="isbn">
-                                                    <label for="inputQuantity">Quantity</label>
-                                                    <input type="number" class="form-control" name="quantity">
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                                                    <button type="submit" class="btn btn-primary">Confirm</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h2 class="pageheader-title">Data Visualization</h2>
                             </div>
                         </div>
                     </div>
-                    <br>
                     <!-- ============================================================== -->
                     <!-- end pageheader  -->
                     <!-- ============================================================== -->
                     <div class="row">
-                        <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-12">
-                            <div class="row">
-                                {% for book in books %}
-                                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="product-thumbnail">
-                                            <div class="product-img-head">
-                                                <div class="product-img">
-                                                    <img src="{{ url_for('static', filename='images/eco-product-img-1.png') }}" alt="" class="img-fluid">
-                                                </div>
-                                            </div>
-                                            <div class="product-content">
-                                                <div class="product-content-head">
-                                                    <h3 class="product-title">{{ book.Title }}</h3>
-                                                    <div class="product-rating d-inline-block">
-                                                        Available
-                                                    </div>
-                                                    <div class="product-title">{{ book.Author }}</div>
-                                                    <div class="product-status">ISBN : {{ book.ISBN }}</div>
-                                                    <div class="product-quantity">Quantity : {{ book.Quantity }}</div>
-                                                </div>
-                                                <div class="product-btn">
-                                                    <a href="javascript:sendDelete('{{ url_for("api.bookDelete", id=book.BookID) }}')" class="btn btn-primary">Remove</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-12">
-                            <div class="product-sidebar">
-                                <div class="product-sidebar-widget">
-                                    <h4 class="mb-0">Book Filter</h4>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <h5 class="card-header">Time Series Data Visualization</h5>
+                                <div class="card-body">
+                                    <iframe width="900" height="700" src="https://datastudio.google.com/embed/reporting/17JzeBhupx5Tvlm5PM_Ullt9MJJdMzQu-/page/p5Qq" frameborder="0" style="border:0" allowfullscreen></iframe>
                                 </div>
-                                    <div class="product-sidebar-widget">
-                                        <h4 class="product-sidebar-widget-title">Status</h4>
-                                        <div class="custom-control custom-radio custom-color-blue ">
-                                            <input type="radio" id="color-1" name="customRadio" class="custom-control-input">
-                                            <label class="custom-control-label" for="color-1">Available</label>
-                                        </div>
-                                        <div class="custom-control custom-radio custom-color-red ">
-                                            <input type="radio" id="color-2" name="customRadio" class="custom-control-input">
-                                            <label class="custom-control-label" for="color-2">Borrowed</label>
-                                        </div>
-                                    </div>
-                                <div class="product-sidebar-widget">
-                                    <a href="#" class="btn btn-outline-light">Reset Filter</a>
+                            </div>
+                            <div class="card">
+                                <h5 class="card-header">Stacked Bar Data Visualization</h5>
+                                <div class="card-body">
+                                    <iframe width="900" height="700" src="https://datastudio.google.com/embed/reporting/1o6pg6r8d4QaZAWkXSDts3Tto8fcmP1Uk/page/T8Qq" frameborder="0" style="border:0" allowfullscreen></iframe>
                                 </div>
                             </div>
                         </div>
@@ -215,15 +147,6 @@
         <script src="{{ url_for('static', filename='vendor/slimscroll/jquery.slimscroll.js') }}"></script>
         <!-- main js -->
         <script src="{{ url_for('static', filename='libs/js/main-js.js') }}"></script>
-        <script>
-            function sendDelete(url) {
-                var request = new XMLHttpRequest();
-                request.open('DELETE', url, true);
-                request.send();
-                alert("Book Deleted!");
-                location.reload(true);
-            }
-        </script>
 </body>
  
 </html>

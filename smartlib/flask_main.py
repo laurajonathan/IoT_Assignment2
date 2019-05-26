@@ -12,6 +12,7 @@ USER = "root"
 PASSWORD = "suwat513"
 DATABASE = "Assignment2"
 
+app.config['SECRET_KEY'] = 'This is a secret'
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://{}:{}@{}/{}".format(USER, PASSWORD, HOST, DATABASE)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
